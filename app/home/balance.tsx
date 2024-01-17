@@ -20,8 +20,8 @@ const Balance = () => {
                 
                 </div>
                 <div className="flex items-start justify-between flex-col">
-                    <div className='h-full'>
-
+                    <div className='h-full flex items-start justify-end w-full'>
+                        <Wallet2 />
                     </div>
                     <div className='text-[1.75rem]'>
                         36,56 $

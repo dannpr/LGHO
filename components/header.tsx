@@ -16,7 +16,9 @@ const Header = () => {
             {pathname === "/receive" && "Receive"}
             {pathname === "/finances" && "Finances"}
         </div>
+        {pathname !== "/finances" && (
         <ConnectKitButton/>
+        )}
     </header>)}
     </>
   )
