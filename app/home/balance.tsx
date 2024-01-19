@@ -1,6 +1,10 @@
+"use client";
+import { ProviderContext } from "@/components/provider";
+import { useContext, useEffect, useState } from "react";
 import { Wallet2, Bolt  } from 'lucide-react';
 
 const Balance = () => {
+    const { balance} = useContext(ProviderContext);
   return (
         <div className="p-4 aspect-[16/6] bg-[#595678] w-full border rounded-md flex items-between justify-between mb-[0.5rem]">
                 <div className="flex items-start justify-between flex-col">
@@ -24,7 +28,7 @@ const Balance = () => {
                         <Wallet2 />
                     </div>
                     <div className='text-[1.75rem]'>
-                        36,56 $
+                        {balance} $
                     </div>
                 </div>
             </div>

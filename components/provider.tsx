@@ -8,7 +8,6 @@ import {
   getDefaultConfig,
 } from "connectkit";
 
-
 const config = createConfig(
   getDefaultConfig({
     alchemyId: "a78ea67f650a46e8bd97f3262d1cef43",
@@ -20,11 +19,24 @@ const config = createConfig(
   })
 );
 
-export const ProviderContext = createContext<{}>({});
+export type Transaction = Array<[string, string, number]>;
+export const ProviderContext = createContext<{
+  balance?: number;
+  setBalance?: (balance: number) => void;
+  transactions?: Transaction;
+  setTransactions?: (transactions: Transaction) => void;
+}>({});
 
 export default function Provider({ children }: { children: React.ReactNode }) {
+  const [balance, setBalance] = useState<number>(157.23);
+  const [transactions, setTransactions] = useState<Transaction>([["AAVE","AAVE",210.20],["Jhon Doe","Jhon Doe",-32.60]]);
   return (
-    <ProviderContext.Provider value={{}}>
+    <ProviderContext.Provider value={{
+      balance,
+      setBalance,
+      transactions,
+      setTransactions,
+    }}>
       <WagmiConfig config={config}>
         <ConnectKitProvider>
           <NextUIProvider>{children}</NextUIProvider>

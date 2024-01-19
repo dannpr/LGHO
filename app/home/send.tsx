@@ -86,6 +86,8 @@ const Send: React.FC<SendProps> = ({ open, setOpen, address }) => {
             <div className="flex items-center justify-between">
               <input
                 placeholder="0"
+                type="number"
+                inputMode="numeric"
                 onChange={(e) => setAmount(parseFloat(e.target.value))}
                 className="text-[1.5rem] w-full bg-transparent h-[7vh] text-[#d9c3ff] focus:border-transparent border-none"
               />
