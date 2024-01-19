@@ -1,82 +1,69 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "protocol-v3/contracts/interfaces/IPool.sol";
 
-interface ILendingPool {
-    function deposit(
-        address asset,
-        uint256 amount,
-        address onBehalfOf,
-        uint16 referralCode
-    ) external;
+interface IGnosisSafe {
+    enum Operation {
+        Call,
+        DelegateCall
+    }
 
-    function borrow(
-        address asset,
-        uint256 amount,
-        uint256 interestRateMode,
-        uint16 referralCode,
-        address onBehalfOf
-    ) external;
-
-    function getReserveData(
-        address asset
-    )
-        external
-        view
-        returns (
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint40
-        );
+    function execTransactionFromModuleReturnData(
+        address to,
+        uint256 value,
+        bytes calldata data,
+        Enum.Operation operation
+    ) external returns (bool success, bytes memory returnData);
 }
 
 contract GhoModule {
-    address immutable SAFE_ADDRESS = "";
-    address immutable GHO_ADDRESS = "0xc4bF5CbDaBE595361438F8c6a187bDc330539c60"; // The address of the GHO token on Sepolia Testnet
-    address immutable AAVE_LENDING_POOL_ADDRESS = "";
+    address immutable GHO_ADDRESS =
+        "0xc4bF5CbDaBE595361438F8c6a187bDc330539c60"; // Set the GHO token address
+    address immutable USDC_ADDRESS =
+        "0x13fA158A117b93C27c55b8216806294a0aE88b6D"; // Set the USDC token address
+    address immutable AAVE_POOL_ADDRESS =
+        "0x6Ae43d3271ff6888e7Fc43Fd7321a503ff738951"; // Set the Aave V3 lending pool address
 
-    GnosisSafe safe = GnosisSafe(SAFE_ADDRESS);
-    ILendingPool public lendingPool = ILendingPool(AAVE_LENDING_POOL_ADDRESS);
+    IGnosisSafe safe;
+    IPool public lPool = IPool(GHO_AAVE_POOL_ADDRESS);
 
-    function supplyBorrowSend(uint256 amount, address recipient) external {
-        // Approve the lending pool to spend the tokens
-        IERC20(GHO_ADDRESS).approve(address(lendingPool), amount);
+    function supplyBorrowSend(
+        address senderSafe,
+        uint256 depositAmount,
+        address recipient
+    ) external OnlyOperator(msg.sender) {
+        IERC20 USDCToken = IERC20(USDC_ADDRESS);
+        uint256 borrowAmount = depositAmount / 2;
 
-        // Deposit tokens into the Aave lending pool
-        lendingPool.deposit(GHO_ADDRESS, amount, msg.sender, 0);
+        // Approve the lending pool to spend the USDC tokens
+        USDCToken.approve(address(lPool), depositAmount);
 
-        // Borrow GHO against the supplied collateral
-        lendingPool.borrow(GHO_ADDRESS, amount, 2, 0, msg.sender); // Assuming 2 is the variable interest rate mode
+        // Deposit USDC into the Aave lending pool
+        lPool.supply(USDC_ADDRESS, depositAmount, address(this), 0);
 
-        // transfer to another address
-        IERC20(GHO_ADDRESS).transferFrom(msg.sender, recipient, amount);
+        // Borrow GHO against the supplied USDC collateral
+        lPool.borrow(GHO_ADDRESS, borrowAmount, 2, 0, address(this)); // Assuming 2 is the variable interest rate mode
+
+        // Transfer the borrowed GHO to the recipient
+        IERC20(GHO_ADDRESS).transfer(recipient, borrowAmount);
     }
 
     function sendGhoToAddress(
         address recipient,
         uint256 amount
-    ) external OnlyOperator(msg.sender) returns (bool success, bytes response) {
-        // Get the GHO balance of this contract
-        uint256 ghoBalance = IERC20(GHO_ADDRESS).balanceOf(address(this));
-
-        // Verify if the gho balance is enough to send
-        require(ghoBalance >= amount, "Not enough GHO balance");
-
+    ) external returns (bool success, bytes memory response) {
         bytes memory data = abi.encodeWithSelector(
             this.supplyBorrowSend.selector,
             amount,
             recipient
         );
 
-        (success, response) = safe.execTransactionFromModuleReturnData();
+        (success, response) = ISafe(msg.sender).execTransactionFromModuleReturnData(
+            recipient,
+            0,
+            data,
+            IGnosisSafe.Operation.Call
+        );
     }
 }
