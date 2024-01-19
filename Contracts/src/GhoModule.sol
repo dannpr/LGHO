@@ -2,23 +2,11 @@
 pragma solidity ^0.8.13;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "protocol-v3/contracts/interfaces/IPool.sol";
-import "safe/contracts/interfaces/IModuleManager.sol";
+import "safe-contracts/interfaces/IModuleManager.sol";
+import "safe-contracts/interfaces/ISafe.sol";
 
-interface IGnosisSafe {
-    enum Operation {
-        Call,
-        DelegateCall
-    }
 
-    function execTransactionFromModuleReturnData(
-        address to,
-        uint256 value,
-        bytes calldata data,
-        Enum.Operation operation
-    ) external returns (bool success, bytes memory returnData);
-}
-
-contract GhoModule {
+contract GhoModule is Module {
     address immutable GHO_ADDRESS =
         "0xc4bF5CbDaBE595361438F8c6a187bDc330539c60"; // Set the GHO token address
     address immutable USDC_ADDRESS =
@@ -60,11 +48,12 @@ contract GhoModule {
             recipient
         );
 
-        (success, response) = ISafe(msg.sender).execTransactionFromModuleReturnData(
-            recipient,
-            0,
-            data,
-            IGnosisSafe.Operation.Call
-        );
+        (success, response) = ISafe(msg.sender)
+            .execTransactionFromModuleReturnData(
+                recipient,
+                0,
+                data,
+                IGnosisSafe.Operation.Call
+            );
     }
 }
