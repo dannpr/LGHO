@@ -2,6 +2,7 @@
 pragma solidity ^0.8.13;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "protocol-v3/contracts/interfaces/IPool.sol";
+import "safe/contracts/interfaces/IModuleManager.sol";
 
 interface IGnosisSafe {
     enum Operation {

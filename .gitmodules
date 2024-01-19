@@ -10,6 +10,3 @@
 [submodule "Contracts/lib/protocol-v3"]
 	path = Contracts/lib/protocol-v3
 	url = https://github.com/aave/protocol-v3
-[submodule "Contracts/lib/safe-contracts"]
-	path = Contracts/lib/safe-contracts
-	url = https://github.com/safe-global/safe-contracts
