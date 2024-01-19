@@ -1,15 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
-
-interface IERC20 {
-    function approve(address spender, uint256 amount) external returns (bool);
-
-    function transferFrom(
-        address sender,
-        address recipient,
-        uint256 amount
-    ) external returns (bool);
-}
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 interface ILendingPool {
     function deposit(
@@ -50,7 +41,7 @@ interface ILendingPool {
 
 contract GhoModule {
     address immutable SAFE_ADDRESS = "";
-    address immutable GHO_ADDRESS = ""; // The address of the GHO token on Sepolia Testnet
+    address immutable GHO_ADDRESS = "0xc4bF5CbDaBE595361438F8c6a187bDc330539c60"; // The address of the GHO token on Sepolia Testnet
     address immutable AAVE_LENDING_POOL_ADDRESS = "";
 
     GnosisSafe safe = GnosisSafe(SAFE_ADDRESS);
