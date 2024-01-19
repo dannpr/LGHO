@@ -1,5 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { ProviderContext } from "@/components/provider";
+
 import {
   Drawer,
   DrawerClose,
@@ -38,20 +40,43 @@ type SendProps = {
 };
 
 const Send: React.FC<SendProps> = ({ open, setOpen, address }) => {
+  const { balance, setBalance, setTransactions } = useContext(ProviderContext);
+
   const { toast } = useToast()
   const cryptos = [
     { value: "GHO", price: 0.9027 },
     { value: "ETH", price: 2327.24 },
   ];
-  const [receiver, setReceiver] = useState("");
+  const [receiver, setReceiver] = useState<string>("");
   const [amount, setAmount] = useState<number>();
   const [selectedCrypto, setSelectedCrypto] = useState("GHO");
 
   useEffect(() => {
-    if (address) {
-      setReceiver(address);
-    }
+    if (address) {setReceiver(address);}
   }, [address]);
+
+  const Send = () => {
+    if (amount && balance && setBalance && setTransactions && Number((amount * cryptos.find((crypto) => crypto.value === selectedCrypto)!.price).toFixed(4)) <= balance) {
+      setBalance!(balance - Number((amount * cryptos.find((crypto) => crypto.value === selectedCrypto)!.price).toFixed(2)));
+      setTransactions!((prevTransactions) => [
+        [receiver, receiver, Number((amount * cryptos.find((crypto) => crypto.value === selectedCrypto)!.price).toFixed(2))],
+        ...prevTransactions,
+      ]);
+      setReceiver("");
+      setAmount(0);
+      toast({
+        title: "Transaction sent",
+      })
+      setOpen(false);
+    }
+    else {
+      toast({
+        variant: "destructive",
+        title: "Transaction failed",
+        description: "Please check your balance and your receiver address",
+      })
+    }
+  }
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
@@ -126,12 +151,7 @@ const Send: React.FC<SendProps> = ({ open, setOpen, address }) => {
           </div>
         </div>
         <DrawerFooter className="flex items-center justify-around flex-row mb-4">
-          <Button className="pl-5 text-[1.25rem] bg-[#d9c3ff] w-[70vw] font-semibold" onClick={() => {
-        toast({
-          title: "Transaction sent",
-        })
-        setOpen(false);
-      }}>
+          <Button className="pl-5 text-[1.25rem] bg-[#d9c3ff] w-[70vw] font-semibold" onClick={()=>Send()}>
             Send
             <LoopAnimation animationData={Checkmark} className="h-6 w-6" />
           </Button>
