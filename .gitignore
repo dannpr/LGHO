@@ -13,4 +13,4 @@ docs/
 # Dotenv file
 .env
 
-/nodes_modules/
+/Modules/nodes_modules/
