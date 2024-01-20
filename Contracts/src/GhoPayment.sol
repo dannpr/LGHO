@@ -5,18 +5,17 @@ import "protocol-v3/contracts/interfaces/IPool.sol";
 
 contract GhoPayment {
     address immutable AAVE_POOL_ADDRESS =
-        "0x6Ae43d3271ff6888e7Fc43Fd7321a503ff738951"; // Set the Aave V3 lending pool address
+        address(0x6Ae43d3271ff6888e7Fc43Fd7321a503ff738951); // Set the Aave V3 lending pool address on sepolia
     address immutable GHO_ADDRESS =
-        "0xc4bF5CbDaBE595361438F8c6a187bDc330539c60"; // Set the GHO token address
+        address(0xc4bF5CbDaBE595361438F8c6a187bDc330539c60); // Set the GHO token address on sepolia
 
-    IGnosisSafe safe;
-    IPool public lPool = IPool(GHO_AAVE_POOL_ADDRESS);
+    IPool public lPool = IPool(AAVE_POOL_ADDRESS);
 
     function sendPayment(
         address _ERC20Token,
         address recipient,
         uint256 amount
-    ) external OnlyOperator(msg.sender) {
+    ) external {
         IERC20 ERC20Token = IERC20(_ERC20Token);
         uint256 borrowAmount = amount / 2;
 
