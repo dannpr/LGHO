@@ -1,66 +1,11 @@
-## Foundry
+# Legho
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+Legho is a mobile payement app that allows users to pay with any crypto and the receiver receives the amount in $GHO
 
-Foundry consists of:
+The Smart Contract: [0x21B4b445A532815a5084195A1317B6e48531B85A](https://sepolia.etherscan.io/address/0x21B4b445A532815a5084195A1317B6e48531B85A)
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+The live demo: [legho.vercel.app](https://legho.vercel.app/)
 
-## Documentation
+The front-end Code: [Legho Frontend](https://github.com/dannpr/LGHO/tree/front-end)
 
-https://book.getfoundry.sh/
-
-## Usage
-
-### Build
-
-```shell
-$ forge build
-```
-
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+The Family implementation Code: [Family Provider](https://github.com/dannpr/LGHO/blob/front-end/components/provider.tsx)
