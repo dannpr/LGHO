@@ -12,7 +12,7 @@ Legho is a mobile payment app that allows users to pay with any crypto, and the 
 
 ## ETHGlobal Submission 🏆
 
-- We have submitted Legho for ETHGlobal under the project name "[LFGHO](https://ethglobal.com/showcase/legho-42jbh)." 🌍
+- We have submitted Legho for ETHGlobal under the project name "[LFGHO](https://ethglobal.com/showcase/legho-42jbh)". 🌍
 
 ## Front-end Code 💻
 
